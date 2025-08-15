@@ -8,6 +8,9 @@ public class BallMovement : MonoBehaviour
     [SerializeField] Text playerScore;
     [SerializeField] Text AIScore;
 
+    bool lastScoredPlayer = true;
+    
+
     int hitCounter;
     Rigidbody2D rb;
 
@@ -27,7 +30,15 @@ public class BallMovement : MonoBehaviour
 
     private void StartBall()
     {
-        rb.linearVelocity = new Vector2(-1, 0) * (initialSpeed + speedIncrease * hitCounter);
+        if (lastScoredPlayer)
+        {
+            rb.linearVelocity = new Vector2(-1, 0) * (initialSpeed + speedIncrease * hitCounter);
+        }
+        else 
+        {
+            rb.linearVelocity = new Vector2(1, 0) * (initialSpeed + speedIncrease * hitCounter);
+        }
+        
     }
 
     private void ResetBall()
@@ -73,18 +84,19 @@ public class BallMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-            if (transform.position.x > 0)
-            {
-                ResetBall();
-                playerScore.text = (int.Parse(playerScore.text) + 1).ToString();
-            }
-            else if (transform.position.x < 0)
-            {
-                ResetBall();
 
-             AIScore.text = (int.Parse(AIScore.text) + 1).ToString();
-            }
+        if (transform.position.x > 0)
+        {
+            ResetBall();
+            playerScore.text = (int.Parse(playerScore.text) + 1).ToString();
+            lastScoredPlayer = true;
+        }
+        else if (transform.position.x < 0)
+        {
+            ResetBall();
+            AIScore.text = (int.Parse(AIScore.text) + 1).ToString();
+            lastScoredPlayer = false;
+        }
 
         
     }
