@@ -8,6 +8,7 @@ public class PlayerMovement : MonoBehaviour
 
     Rigidbody2D rb;
     Vector2 playerMove;
+    private float aiSpeed = 5f;
 
 
 
@@ -30,6 +31,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+
+     private void FixedUpdate()
+    {
+        rb.linearVelocity = playerMove * movementSpeed;
+    }
+
     private void PlayerControl()
     {
         playerMove = new Vector2(0, Input.GetAxis("Vertical"));
@@ -37,24 +44,13 @@ public class PlayerMovement : MonoBehaviour
 
     private void AIControl()
     {
-        if (ball.transform.position.y > transform.position.y  + 0.7f)
-        {
-            playerMove = new Vector2(0,1);
-        }
-        else if (ball.transform.position.y < transform.position.y - 0.7f)
-        {
-            playerMove = new Vector2(0,-1);
-        }
-        else
-        {
-            playerMove = new Vector2(0,0);
-        }
+        // Hedeflenen Y pozisyonunu hesapla
+    float targetY = ball.transform.position.y;
 
-    }
+    // Hedefe doğru yumuşak hareket et
+    transform.position = Vector2.MoveTowards(transform.position, new Vector2(transform.position.x, targetY), aiSpeed * Time.deltaTime);
+}
     
-     private void FixedUpdate()
-    {
-        rb.linearVelocity = playerMove * movementSpeed;
-    }
+    
 
 }
